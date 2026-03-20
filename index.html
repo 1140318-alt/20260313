@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生物科展一頁式主題靈感</title>
+  <style>
+    :root {
+      --bg: #f4fbf7;
+      --card: #ffffff;
+      --primary: #1f9d75;
+      --primary-dark: #136b4f;
+      --accent: #38bdf8;
+      --text: #163029;
+      --muted: #4b635b;
+      --shadow: 0 10px 28px rgba(17, 83, 64, 0.14);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, #d5f5e7 0%, transparent 45%),
+        radial-gradient(circle at 90% 0%, #d3eefc 0%, transparent 35%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2.5rem 1.2rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--primary-dark);
+      letter-spacing: .03em;
+    }
+
+    .subtitle {
+      margin-top: .7rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: .7rem;
+      align-items: center;
+    }
+
+    select, button {
+      border: 1px solid #cde9df;
+      border-radius: 12px;
+      padding: .7rem .9rem;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    select { background: #fbfffd; color: var(--text); }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button.secondary { background: #3f8fb3; }
+
+    button:hover { transform: translateY(-1px); opacity: .92; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: .9rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e1f2ea;
+      border-left: 6px solid var(--primary);
+      border-radius: 14px;
+      padding: .9rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: .82rem;
+      background: #e9faf3;
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: .15rem .65rem;
+      margin-bottom: .45rem;
+    }
+
+    .card h3 {
+      margin: .15rem 0 .35rem;
+      font-size: 1.06rem;
+      color: #144c3b;
+    }
+
+    .card p {
+      margin: 0;
+      color: #35554a;
+      font-size: .95rem;
+    }
+
+    .highlight {
+      margin-top: 1rem;
+      background: linear-gradient(120deg, #e5fff2, #e1f4ff);
+      border-left: 6px solid var(--accent);
+    }
+
+    .highlight h2 {
+      margin: .1rem 0 .3rem;
+      color: #0f4f66;
+      font-size: 1.2rem;
+    }
+
+    footer {
+      text-align: center;
+      color: #5a746a;
+      font-size: .9rem;
+      margin-top: 1.2rem;
+    }
+
+    @media (max-width: 640px) {
+      .controls { grid-template-columns: 1fr; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>生物科展主題探索站</h1>
+      <p class="subtitle">一頁掌握可行又有亮點的研究方向，從觀察、設計到驗證！</p>
+    </header>
+
+    <section class="panel">
+      <div class="controls">
+        <select id="category">
+          <option value="all">全部方向</option>
+          <option value="植物">植物與環境</option>
+          <option value="微生物">微生物與發酵</option>
+          <option value="生理">人體與生理</option>
+          <option value="生態">生態保育</option>
+          <option value="生技">生物科技入門</option>
+        </select>
+        <button id="filterBtn">篩選主題</button>
+        <button id="randomBtn" class="secondary">隨機推薦</button>
+      </div>
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <section class="panel highlight" id="highlight">
+      <h2>💡 今日推薦</h2>
+      <p id="highlightText">按下「隨機推薦」即可看到適合你切入的研究方向！</p>
+    </section>
+
+    <footer>建議搭配：研究動機、假設、變因控制、數據紀錄表，讓科展作品更完整。</footer>
+  </main>
+
+  <script>
+    const topics = [
+      {
+        category: "植物",
+        title: "不同光色對綠豆生長速率的影響",
+        desc: "比較紅光、藍光、白光下植物高度與葉片數，探討光合作用效率。"
+      },
+      {
+        category: "植物",
+        title: "天然肥料對小白菜葉綠素的變化",
+        desc: "以咖啡渣、蛋殼粉等材料為處理組，觀察葉色與生長差異。"
+      },
+      {
+        category: "微生物",
+        title: "糖濃度對酵母發酵速率的影響",
+        desc: "透過二氧化碳產量比較發酵效率，適合做量化分析。"
+      },
+      {
+        category: "微生物",
+        title: "乳酸菌在不同溫度下活性比較",
+        desc: "使用優格菌種，測試低溫、常溫與溫熱環境的活菌數變化。"
+      },
+      {
+        category: "生理",
+        title: "運動前後心跳恢復時間研究",
+        desc: "記錄不同運動強度後心跳回復曲線，討論體能與恢復能力。"
+      },
+      {
+        category: "生理",
+        title: "睡眠時數與短期記憶表現",
+        desc: "以簡易記憶測驗比較不同睡眠時數的結果，討論大腦功能。"
+      },
+      {
+        category: "生態",
+        title: "校園昆蟲多樣性調查",
+        desc: "不同區域設置觀察點，統計昆蟲種類與數量，分析棲地差異。"
+      },
+      {
+        category: "生態",
+        title: "塑膠與紙類垃圾在土壤中的分解比較",
+        desc: "長期追蹤重量與外觀變化，探討環境友善材質。"
+      },
+      {
+        category: "生技",
+        title: "DNA 萃取：不同水果的細胞核酸量比較",
+        desc: "使用香蕉、草莓、奇異果做 DNA 萃取，觀察沉澱量與操作差異。"
+      },
+      {
+        category: "生技",
+        title: "自製生物感測紙：pH 變化顯色測試",
+        desc: "利用紫高麗菜色素製作指示劑，評估不同液體酸鹼性。"
+      }
+    ];
+
+    const cards = document.getElementById('cards');
+    const category = document.getElementById('category');
+    const highlightText = document.getElementById('highlightText');
+
+    function render(list) {
+      cards.innerHTML = list.map(item => `
+        <article class="card">
+          <span class="tag">${item.category}</span>
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+        </article>
+      `).join('');
+
+      if (!list.length) {
+        cards.innerHTML = `<article class="card"><h3>找不到符合條件的主題</h3><p>請切換分類或查看全部方向。</p></article>`;
+      }
+    }
+
+    function filterTopics() {
+      const picked = category.value;
+      if (picked === 'all') return render(topics);
+      render(topics.filter(t => t.category === picked));
+    }
+
+    function randomTopic() {
+      const picked = category.value;
+      const pool = picked === 'all' ? topics : topics.filter(t => t.category === picked);
+      if (!pool.length) {
+        highlightText.textContent = '目前沒有可推薦的主題，請先調整分類。';
+        return;
+      }
+      const choice = pool[Math.floor(Math.random() * pool.length)];
+      highlightText.textContent = `推薦你試試：「${choice.title}」— ${choice.desc}`;
+    }
+
+    document.getElementById('filterBtn').addEventListener('click', filterTopics);
+    document.getElementById('randomBtn').addEventListener('click', randomTopic);
+
+    render(topics);
+  </script>
+</body>
+</html>
